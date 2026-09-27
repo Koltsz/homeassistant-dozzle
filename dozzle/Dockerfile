@@ -30,7 +30,7 @@ COPY rootfs /
 LABEL \
     org.opencontainers.image.title="Home Assistant App: Dozzle" \
     org.opencontainers.image.description="Visionneur de logs Docker - Ingress, agent optionnel." \
-    org.opencontainers.image.source="https://github.com/Erreur32/homeassistant-dozzle" \
+    org.opencontainers.image.source="https://github.com/Koltsz/homeassistant-dozzle" \
     org.opencontainers.image.version="${BUILD_VERSION}" \
     org.opencontainers.image.licenses="MIT" \
     io.hass.version="${BUILD_VERSION}" \

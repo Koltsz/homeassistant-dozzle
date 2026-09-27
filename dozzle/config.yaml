@@ -6,7 +6,7 @@ version: "0.3.17"
 slug: "dozzle"
 description: "Real-time Docker log viewer (Ingress, optional agent)"
 # Project page (support / source of the packaged app for HA)
-url: "https://github.com/Erreur32/homeassistant-dozzle"
+url: "https://github.com/Koltsz/homeassistant-dozzle"
 
 # Multi-arch image published by GitHub Actions (GHCR), aligned with the repository name.
 # For a local build without pulling: remove this line from a copy of the repository.
