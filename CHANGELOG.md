@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this repository ([homeassistant-dozzle](https://github.com/Erreur32/homeassistant-dozzle)) are documented here. Older **0.2.x** packaging lines are not carried over.
+All notable changes to this repository ([homeassistant-dozzle](https://github.com/Koltsz/homeassistant-dozzle)) are documented here. Older **0.2.x** packaging lines are not carried over.
 
 A copy also lives at the repository root: [`CHANGELOG.md`](../CHANGELOG.md).
 
@@ -199,7 +199,7 @@ A copy also lives at the repository root: [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## 0.3.12 - 2026-08-15
 
-- **Fix:** mount the Home Assistant SSL directory (read-only) so the `agent_cert`/`agent_key` options can actually find the certificate files. Thanks to [@maxexcloo](https://github.com/maxexcloo) ([#5](https://github.com/Erreur32/homeassistant-dozzle/pull/5)).
+- **Fix:** mount the Home Assistant SSL directory (read-only) so the `agent_cert`/`agent_key` options can actually find the certificate files. Thanks to [@maxexcloo](https://github.com/maxexcloo) ([#5](https://github.com/Koltsz/homeassistant-dozzle/pull/5)).
 - **Dozzle binary:** upgraded from `v10.6.13` → `v10.7.1` (upstream release).
   <!-- auto-genere depuis les notes de release GitHub (v10.7.1), a relire/nettoyer -->
   - **Bug Fixes:**
@@ -326,7 +326,7 @@ A copy also lives at the repository root: [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## 0.3.0 - 2026-04-13
 
-- **Agent-only mode:** new `enable_master` option (default `true`). Set to `false` with `enable_agent: true` to run only the agent on port 7007 (no web UI, no nginx). Replaces the standalone [dozzle-agent](https://github.com/Erreur32/homeassistant-dozzle-agent) add-on. (#5)
+- **Agent-only mode:** new `enable_master` option (default `true`). Set to `false` with `enable_agent: true` to run only the agent on port 7007 (no web UI, no nginx). Replaces the standalone [dozzle-agent](https://github.com/Koltsz/homeassistant-dozzle-agent) add-on. (#5)
 - **Custom TLS certificates:** new `agent_cert` / `agent_key` options. Point to cert/key files in `/ssl/` to restrict agent connections to instances sharing the same key pair. By default, Dozzle uses shared certs embedded in the binary (encrypted but not authenticated). (#5)
 - **Docs:** new sections in DOCS.md for agent-only mode, TLS certificate setup, and migration from standalone agent add-on.
 

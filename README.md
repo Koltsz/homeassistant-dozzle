@@ -1,7 +1,7 @@
 # Home Assistant Add-on Repository: Dozzle
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/Erreur32/homeassistant-dozzle/main/logo.svg" alt="Dozzle" width="80">
+<img src="https://raw.githubusercontent.com/Koltsz/homeassistant-dozzle/main/logo.svg" alt="Dozzle" width="80">
 
 <h2>Dozzle</h2>
 
@@ -39,7 +39,7 @@ This repository ships the **Dozzle** **Home Assistant App** (formerly “add-on�
 
 ## Quick start
 
-[![Add this repository to Home Assistant](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FErreur32%2Fhomeassistant-dozzle)
+[![Add this repository to Home Assistant](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FKoltsz%2Fhomeassistant-dozzle)
 
 1. Use the button above **or** add the URL manually under **Settings → Apps → ⋮ → App repositories**.
 2. Confirm **Add**; restart Home Assistant if the Supervisor prompts you.
@@ -103,7 +103,7 @@ Configurable in the Supervisor UI after install. Full reference: [`dozzle/DOCS.m
 
 ### Agent-only mode
 
-Set `enable_master: false` + `enable_agent: true` to disable the web UI and run only the agent on port 7007. This replaces the standalone [dozzle-agent](https://github.com/Erreur32/homeassistant-dozzle-agent) add-on.
+Set `enable_master: false` + `enable_agent: true` to disable the web UI and run only the agent on port 7007. This replaces the standalone [dozzle-agent](https://github.com/Koltsz/homeassistant-dozzle-agent) add-on.
 
 ---
 
@@ -126,7 +126,7 @@ environment:
 
 | Resource            | URL                                                                                             |
 | ------------------- | ----------------------------------------------------------------------------------------------- |
-| This repository     | [github.com/Erreur32/homeassistant-dozzle](https://github.com/Erreur32/homeassistant-dozzle)    |
+| This repository     | [github.com/Koltsz/homeassistant-dozzle](https://github.com/Koltsz/homeassistant-dozzle)    |
 | Upstream Dozzle     | [github.com/amir20/dozzle](https://github.com/amir20/dozzle) · [dozzle.dev](https://dozzle.dev) |
 | Home Assistant Apps | [developers.home-assistant.io/docs/apps](https://developers.home-assistant.io/docs/apps/)       |
 
@@ -142,14 +142,14 @@ Pull requests and improvements are welcome.
 
 ## Acknowledgments
 
-Thanks to [@JZ-SmartThings](https://github.com/JZ-SmartThings) for reporting and thoroughly investigating the notification persistence issue ([#1](https://github.com/Erreur32/homeassistant-dozzle/issues/1)).
+Thanks to [@JZ-SmartThings](https://github.com/JZ-SmartThings) for reporting and thoroughly investigating the notification persistence issue ([#1](https://github.com/Koltsz/homeassistant-dozzle/issues/1)).
 
-Thanks to [@maxexcloo](https://github.com/maxexcloo) for fixing the SSL directory mount so custom agent certificates work as documented ([#5](https://github.com/Erreur32/homeassistant-dozzle/pull/5)).
+Thanks to [@maxexcloo](https://github.com/maxexcloo) for fixing the SSL directory mount so custom agent certificates work as documented ([#5](https://github.com/Koltsz/homeassistant-dozzle/pull/5)).
 
 ## Authors
 
-Packaging: [Erreur32][erreur32]. Upstream Dozzle: [Amir Raminfar](https://github.com/amir20) and [contributors](https://github.com/amir20/dozzle/graphs/contributors).  
-This repo’s [contributors](https://github.com/Erreur32/homeassistant-dozzle/graphs/contributors).
+Packaging: [Koltsz][erreur32]. Upstream Dozzle: [Amir Raminfar](https://github.com/amir20) and [contributors](https://github.com/amir20/dozzle/graphs/contributors).  
+This repo’s [contributors](https://github.com/Koltsz/homeassistant-dozzle/graphs/contributors).
 
 ## License
 
@@ -157,15 +157,15 @@ Repository packaging: see [LICENSE][license] when present in the repo. Upstream 
 
 ---
 
-[contributors]: https://github.com/Erreur32/homeassistant-dozzle/graphs/contributors
-[erreur32]: https://github.com/Erreur32
-[issue]: https://github.com/Erreur32/homeassistant-dozzle/issues
-[license]: https://github.com/Erreur32/homeassistant-dozzle/blob/main/LICENSE
+[contributors]: https://github.com/Koltsz/homeassistant-dozzle/graphs/contributors
+[erreur32]: https://github.com/Koltsz
+[issue]: https://github.com/Koltsz/homeassistant-dozzle/issues
+[license]: https://github.com/Koltsz/homeassistant-dozzle/blob/main/LICENSE
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2026.svg
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-stable-green.svg
 [release-shield]: https://img.shields.io/badge/version-v0.3.17-blue.svg
-[release]: https://github.com/Erreur32/homeassistant-dozzle/releases/tag/v0.3.17
+[release]: https://github.com/Koltsz/homeassistant-dozzle/releases/tag/v0.3.17
 [license-shield]: https://img.shields.io/badge/license-MIT-blue.svg
-[issues-shield]: https://img.shields.io/github/issues/Erreur32/homeassistant-dozzle.svg
-[stars-shield]: https://img.shields.io/github/stars/Erreur32/homeassistant-dozzle.svg
-[stars]: https://github.com/Erreur32/homeassistant-dozzle/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Koltsz/homeassistant-dozzle.svg
+[stars-shield]: https://img.shields.io/github/stars/Koltsz/homeassistant-dozzle.svg
+[stars]: https://github.com/Koltsz/homeassistant-dozzle/stargazers

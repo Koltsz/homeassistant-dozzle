@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Erreur32/homeassistant-dozzle/main/logo.svg" alt="Dozzle" width="80">
+<img src="https://raw.githubusercontent.com/Koltsz/homeassistant-dozzle/main/logo.svg" alt="Dozzle" width="80">
 
 # Dozzle - Home Assistant App
 
@@ -31,7 +31,7 @@
 
 ## Quick start
 
-1. Add the [repository](https://github.com/Erreur32/homeassistant-dozzle) in **Settings → Apps → Repositories**
+1. Add the [repository](https://github.com/Koltsz/homeassistant-dozzle) in **Settings → Apps → Repositories**
 2. Install **Dozzle** - do **not** start it yet
 3. **Disable Protection mode** on the add-on page
 4. Click **Start** → open **Dozzle** from the sidebar
@@ -41,12 +41,12 @@ Full documentation: [`DOCS.md`](DOCS.md) · Release history: [`CHANGELOG.md`](CH
 ---
 
 [release-shield]: https://img.shields.io/badge/version-v0.3.17-blue.svg
-[release]: https://github.com/Erreur32/homeassistant-dozzle/releases/tag/v0.3.17
+[release]: https://github.com/Koltsz/homeassistant-dozzle/releases/tag/v0.3.17
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-stable-green.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2026.svg
 [license-shield]: https://img.shields.io/badge/license-MIT-blue.svg
-[license]: https://github.com/Erreur32/homeassistant-dozzle/blob/main/LICENSE
-[stars-shield]: https://img.shields.io/github/stars/Erreur32/homeassistant-dozzle.svg
-[stars]: https://github.com/Erreur32/homeassistant-dozzle/stargazers
-[issues-shield]: https://img.shields.io/github/issues/Erreur32/homeassistant-dozzle.svg
-[issues]: https://github.com/Erreur32/homeassistant-dozzle/issues
+[license]: https://github.com/Koltsz/homeassistant-dozzle/blob/main/LICENSE
+[stars-shield]: https://img.shields.io/github/stars/Koltsz/homeassistant-dozzle.svg
+[stars]: https://github.com/Koltsz/homeassistant-dozzle/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Koltsz/homeassistant-dozzle.svg
+[issues]: https://github.com/Koltsz/homeassistant-dozzle/issues

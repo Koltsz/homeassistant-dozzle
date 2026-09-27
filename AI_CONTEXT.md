@@ -11,7 +11,7 @@ https://github.com/hassio-addons/addon-adguard-home
 https://github.com/hassio-addons/addon-overseerr
 
 
-Add-on Home Assistant Dozzle pour visualiser les logs Docker en temps réel https://github.com/Erreur32/homeassistant-dozzle
+Add-on Home Assistant Dozzle pour visualiser les logs Docker en temps réel https://github.com/Koltsz/homeassistant-dozzle
  donc on se concentre sur la doc de home assistant pour realise l'addon
 dozzle marche tres bien , rien a faire avec ( en theorie )
  il faut apparement bien deux port interne pour dozzle 8080 pour ingress et 8081 pour acces externe et le 7007 pour l'agent

@@ -508,7 +508,7 @@ do_commit_tag_push() {
   echo -e "  ${G}✓${R} Done."
   echo ""
   echo -e "  ${Y}⚠${R} Attendre la fin du workflow ${C}Builder${R} (job ${C}manifest${R}) avant de tester la mise a jour dans HA :"
-  echo -e "    ${C}https://github.com/Erreur32/homeassistant-dozzle/actions${R}"
+  echo -e "    ${C}https://github.com/Koltsz/homeassistant-dozzle/actions${R}"
   echo -e "    Sinon Supervisor peut echouer avec ${RED}404 manifest unknown${R} (image pas encore publiee sur GHCR)."
   echo ""
   return 0

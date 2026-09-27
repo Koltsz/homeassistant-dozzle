@@ -38,4 +38,4 @@ LABEL \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.name="Dozzle" \
     io.hass.description="Real-time Docker log viewer (Ingress, optional agent)." \
-    io.hass.url="https://github.com/Erreur32/homeassistant-dozzle"
+    io.hass.url="https://github.com/Koltsz/homeassistant-dozzle"

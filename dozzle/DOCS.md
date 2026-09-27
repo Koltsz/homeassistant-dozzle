@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/Erreur32/homeassistant-dozzle/main/logo.svg" alt="Dozzle" width="80">
+<img src="https://raw.githubusercontent.com/Koltsz/homeassistant-dozzle/main/logo.svg" alt="Dozzle" width="80">
 
 # Dozzle - Real-time Docker log viewer
 
@@ -16,7 +16,7 @@
 
 ## Getting started
 
-1. Add the [repository](https://github.com/Erreur32/homeassistant-dozzle) in **Settings -> Apps -> Repositories**.
+1. Add the [repository](https://github.com/Koltsz/homeassistant-dozzle) in **Settings -> Apps -> Repositories**.
 2. Install **Dozzle** - do **not** start it yet.
 3. On the add-on page: **disable Protection mode** (toggle in the top-right area).
 4. Click **Start**, then open **Dozzle** from the sidebar.
@@ -55,7 +55,7 @@
 
 ## Agent-only mode (no web UI)
 
-This add-on can replace the standalone [dozzle-agent](https://github.com/Erreur32/homeassistant-dozzle-agent) add-on entirely. Set:
+This add-on can replace the standalone [dozzle-agent](https://github.com/Koltsz/homeassistant-dozzle-agent) add-on entirely. Set:
 
 ```yaml
 enable_master: false
