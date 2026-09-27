@@ -20,22 +20,43 @@ jobs:
           TAG=$(curl -s https://api.github.com/repos/amir20/dozzle/releases/latest | jq -r '.tag_name')
           echo "tag=${TAG}" >> $GITHUB_OUTPUT
 
-      - name: Read current pinned version
+      - name: Read current pinned versions
         id: current
         run: |
-          CURRENT=$(grep '^ARG DOZZLE_VERSION=' dozzle/Dockerfile | cut -d= -f2)
-          echo "version=${CURRENT}" >> $GITHUB_OUTPUT
+          DOZZLE_CURRENT=$(grep '^ARG DOZZLE_VERSION=' dozzle/Dockerfile | cut -d= -f2)
+          BUILD_CURRENT=$(grep '^ARG BUILD_VERSION=' dozzle/Dockerfile | cut -d= -f2)
+          CONFIG_CURRENT=$(grep '^version:' dozzle/config.yaml | awk '{print $2}' | tr -d '"')
+          echo "dozzle=${DOZZLE_CURRENT}" >> $GITHUB_OUTPUT
+          echo "build=${BUILD_CURRENT}" >> $GITHUB_OUTPUT
+          echo "config=${CONFIG_CURRENT}" >> $GITHUB_OUTPUT
 
-      - name: Update Dockerfile if newer
-        if: steps.dozzle.outputs.tag != steps.current.outputs.version
+      - name: Bump versions if newer Dozzle release
+        if: steps.dozzle.outputs.tag != steps.current.outputs.dozzle
+        id: bump
         run: |
+          # Bump Dozzle version
           sed -i "s/^ARG DOZZLE_VERSION=.*/ARG DOZZLE_VERSION=${{ steps.dozzle.outputs.tag }}/" dozzle/Dockerfile
 
+          # Bump addon patch version (e.g. 0.3.17 → 0.3.18)
+          CURRENT="${{ steps.current.outputs.build }}"
+          MAJOR_MINOR=$(echo "${CURRENT}" | cut -d. -f1-2)
+          PATCH=$(echo "${CURRENT}" | cut -d. -f3)
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="${MAJOR_MINOR}.${NEW_PATCH}"
+
+          # Update Dockerfile BUILD_VERSION
+          sed -i "s/^ARG BUILD_VERSION=.*/ARG BUILD_VERSION=${NEW_VERSION}/" dozzle/Dockerfile
+
+          # Update config.yaml version (Home Assistant reads this for update notifications)
+          sed -i "s/^version:.*/version: \"${NEW_VERSION}\"/" dozzle/config.yaml
+
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
       - name: Commit and push
-        if: steps.dozzle.outputs.tag != steps.current.outputs.version
+        if: steps.dozzle.outputs.tag != steps.current.outputs.dozzle
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dozzle/Dockerfile
-          git commit -m "Bump Dozzle to ${{ steps.dozzle.outputs.tag }}"
+          git add dozzle/Dockerfile dozzle/config.yaml
+          git commit -m "Bump Dozzle to ${{ steps.dozzle.outputs.tag }} → addon v${{ steps.bump.outputs.new_version }}"
           git push
