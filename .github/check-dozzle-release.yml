@@ -1,0 +1,41 @@
+name: Check Dozzle Release
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # runs daily at 6am UTC
+  workflow_dispatch:         # lets you trigger it manually
+
+permissions:
+  contents: write
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get latest Dozzle release tag
+        id: dozzle
+        run: |
+          TAG=$(curl -s https://api.github.com/repos/amir20/dozzle/releases/latest | jq -r '.tag_name')
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+
+      - name: Read current pinned version
+        id: current
+        run: |
+          CURRENT=$(grep '^ARG DOZZLE_VERSION=' dozzle/Dockerfile | cut -d= -f2)
+          echo "version=${CURRENT}" >> $GITHUB_OUTPUT
+
+      - name: Update Dockerfile if newer
+        if: steps.dozzle.outputs.tag != steps.current.outputs.version
+        run: |
+          sed -i "s/^ARG DOZZLE_VERSION=.*/ARG DOZZLE_VERSION=${{ steps.dozzle.outputs.tag }}/" dozzle/Dockerfile
+
+      - name: Commit and push
+        if: steps.dozzle.outputs.tag != steps.current.outputs.version
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dozzle/Dockerfile
+          git commit -m "Bump Dozzle to ${{ steps.dozzle.outputs.tag }}"
+          git push
