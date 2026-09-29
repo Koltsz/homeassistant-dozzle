@@ -17,19 +17,24 @@ jobs:
 
       - name: Get latest Dozzle release tag
         id: dozzle
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG=$(curl -s https://api.github.com/repos/amir20/dozzle/releases/latest | jq -r '.tag_name')
-          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          TAG=$(gh api repos/amir20/dozzle/releases/latest --jq '.tag_name')
+          # Guard against API errors / rate limits returning null or empty
+          if [[ ! "${TAG}" =~ ^v[0-9] ]]; then
+            echo "::error::Could not determine a valid Dozzle release tag (got '${TAG}')"
+            exit 1
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Read current pinned versions
         id: current
         run: |
           DOZZLE_CURRENT=$(grep '^ARG DOZZLE_VERSION=' dozzle/Dockerfile | cut -d= -f2)
           BUILD_CURRENT=$(grep '^ARG BUILD_VERSION=' dozzle/Dockerfile | cut -d= -f2)
-          CONFIG_CURRENT=$(grep '^version:' dozzle/config.yaml | awk '{print $2}' | tr -d '"')
-          echo "dozzle=${DOZZLE_CURRENT}" >> $GITHUB_OUTPUT
-          echo "build=${BUILD_CURRENT}" >> $GITHUB_OUTPUT
-          echo "config=${CONFIG_CURRENT}" >> $GITHUB_OUTPUT
+          echo "dozzle=${DOZZLE_CURRENT}" >> "$GITHUB_OUTPUT"
+          echo "build=${BUILD_CURRENT}" >> "$GITHUB_OUTPUT"
 
       - name: Bump versions if newer Dozzle release
         if: steps.dozzle.outputs.tag != steps.current.outputs.dozzle
@@ -42,8 +47,7 @@ jobs:
           CURRENT="${{ steps.current.outputs.build }}"
           MAJOR_MINOR=$(echo "${CURRENT}" | cut -d. -f1-2)
           PATCH=$(echo "${CURRENT}" | cut -d. -f3)
-          NEW_PATCH=$((PATCH + 1))
-          NEW_VERSION="${MAJOR_MINOR}.${NEW_PATCH}"
+          NEW_VERSION="${MAJOR_MINOR}.$((PATCH + 1))"
 
           # Update Dockerfile BUILD_VERSION
           sed -i "s/^ARG BUILD_VERSION=.*/ARG BUILD_VERSION=${NEW_VERSION}/" dozzle/Dockerfile
@@ -51,21 +55,41 @@ jobs:
           # Update config.yaml version (Home Assistant reads this for update notifications)
           sed -i "s/^version:.*/version: \"${NEW_VERSION}\"/" dozzle/config.yaml
 
-          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+          echo "new_version=${NEW_VERSION}" >> "$GITHUB_OUTPUT"
 
-      - name: Commit and push
-        if: steps.dozzle.outputs.tag != steps.current.outputs.dozzle
+      - name: Commit and push version bump
+        if: steps.bump.outputs.new_version != ''
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add dozzle/Dockerfile dozzle/config.yaml
           git commit -m "Bump Dozzle to ${{ steps.dozzle.outputs.tag }} → addon v${{ steps.bump.outputs.new_version }}"
-          git push
+          # Rebase in case another job pushed meanwhile, then retry once
+          git pull --rebase origin main || true
+          git push || (sleep 5 && git pull --rebase origin main && git push)
 
-      # Pushes made with the default GITHUB_TOKEN do NOT trigger other workflows.
-      # Explicitly dispatch the builder so the new version gets built & published.
+      # Pushes made with the default GITHUB_TOKEN do NOT trigger other workflows,
+      # so we explicitly dispatch the builder. We also self-heal: if the image for
+      # the current version is missing (e.g. a previous build failed or was skipped),
+      # dispatch the builder again so the add-on never gets stuck on a 404.
+      - name: Ensure image exists for current version
+        id: verify
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          IMAGE=$(grep '^image:' dozzle/config.yaml | awk '{print $2}')
+          VERSION=$(grep '^version:' dozzle/config.yaml | awk '{print $2}' | tr -d '"')
+          echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          if docker manifest inspect "${IMAGE}:${VERSION}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Image ${IMAGE}:${VERSION} is missing - triggering a build"
+          fi
+
       - name: Trigger builder workflow
-        if: steps.dozzle.outputs.tag != steps.current.outputs.dozzle
+        if: steps.verify.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run builder.yaml --ref main
