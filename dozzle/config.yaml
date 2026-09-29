@@ -2,6 +2,7 @@
 # https://developers.home-assistant.io/docs/apps/configuration
 # Do not use the `advanced` key (deprecated since Supervisor 2026.03.0).
 name: "Dozzle"
+# Auto-bumped by .github/workflows/check-dozzle-release.yml when Dozzle upstream releases.
 version: "0.3.18"
 slug: "dozzle"
 description: "Real-time Docker log viewer (Ingress, optional agent)"
