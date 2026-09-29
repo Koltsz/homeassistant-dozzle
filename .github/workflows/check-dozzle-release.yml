@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   update-version:
@@ -60,3 +61,11 @@ jobs:
           git add dozzle/Dockerfile dozzle/config.yaml
           git commit -m "Bump Dozzle to ${{ steps.dozzle.outputs.tag }} → addon v${{ steps.bump.outputs.new_version }}"
           git push
+
+      # Pushes made with the default GITHUB_TOKEN do NOT trigger other workflows.
+      # Explicitly dispatch the builder so the new version gets built & published.
+      - name: Trigger builder workflow
+        if: steps.dozzle.outputs.tag != steps.current.outputs.dozzle
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run builder.yaml --ref main
