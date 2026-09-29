@@ -173,3 +173,28 @@ jobs:
             ${{ needs.prepare.outputs.version }}
             latest
           registry-prefix: ${{ needs.prepare.outputs.registry_prefix }}
+
+  # Keep the registry tidy: retain only the most recent versions of each
+  # package (the 'latest' tag always points at the newest, so it is safe).
+  cleanup:
+    name: Clean up old package versions
+    needs: [init, manifest]
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && needs.init.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - homeassistant-dozzle
+          - amd64-homeassistant-dozzle
+          - aarch64-homeassistant-dozzle
+    steps:
+      - name: Delete old versions of ${{ matrix.package }}
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ matrix.package }}
+          package-type: container
+          min-versions-to-keep: 5
+          token: ${{ secrets.GITHUB_TOKEN }}
