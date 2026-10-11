@@ -174,10 +174,14 @@ jobs:
             latest
           registry-prefix: ${{ needs.prepare.outputs.registry_prefix }}
 
-  # Keep the registry tidy: retain only the most recent versions of each
-  # package (the 'latest' tag always points at the newest, so it is safe).
+  # Keep the registry tidy by deleting old *tagged* releases only.
+  # NOTE: we must never delete untagged manifests here: the multi-arch index
+  # references per-arch child manifests that are stored untagged in this same
+  # repository. Deleting them breaks the index and Home Assistant then fails
+  # with "manifest unknown". The generic actions/delete-package-versions action
+  # does not distinguish these, so we filter by tag ourselves.
   cleanup:
-    name: Clean up old package versions
+    name: Clean up old versions of ${{ matrix.package }}
     needs: [init, manifest]
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && needs.init.outputs.changed == 'true'
     runs-on: ubuntu-latest
@@ -190,11 +194,36 @@ jobs:
           - homeassistant-dozzle
           - amd64-homeassistant-dozzle
           - aarch64-homeassistant-dozzle
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      KEEP: "5"
     steps:
-      - name: Delete old versions of ${{ matrix.package }}
-        uses: actions/delete-package-versions@v5
-        with:
-          package-name: ${{ matrix.package }}
-          package-type: container
-          min-versions-to-keep: 5
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete old tagged releases of ${{ matrix.package }}
+        run: |
+          set -euo pipefail
+          OWNER="${GITHUB_REPOSITORY_OWNER}"
+          PKG="${{ matrix.package }}"
+
+          # Only versions carrying a plain x.y.z tag are candidates. Untagged
+          # manifests (per-arch children / attestations) are never selected.
+          gh api --paginate "/users/${OWNER}/packages/container/${PKG}/versions?per_page=100" \
+            --jq '.[]
+              | select((.metadata.container.tags // []) | any(test("^[0-9]+\\.[0-9]+\\.[0-9]+$")))
+              | [.id, .created_at, ((.metadata.container.tags // []) | join(","))]
+              | @tsv' \
+            | sort -k2,2 -r > /tmp/versions.tsv || true
+
+          total=$(wc -l < /tmp/versions.tsv | tr -d ' ')
+          echo "Found ${total} tagged releases (keeping newest ${KEEP})"
+
+          n=0
+          while IFS=$'\t' read -r id created tags; do
+            [ -z "${id:-}" ] && continue
+            n=$((n + 1))
+            if [ "$n" -le "$KEEP" ]; then
+              echo "keep   ${tags}  (${created})"
+            else
+              echo "delete ${tags}  (${created})  id=${id}"
+              gh api -X DELETE "/users/${OWNER}/packages/container/${PKG}/versions/${id}" || true
+            fi
+          done < /tmp/versions.tsv
